@@ -1,0 +1,95 @@
+install.packages(“RFinanceYJ”)
+library(RFinanceYJ)sony <- quoteStockTsData(‘6758.t’, since=‘2013-01-01’)
+toyota <- quoteStockTsData(‘7203.t’, since=‘2013-01-01’)
+nikkei_h <- quoteStockTsData(‘998407.O’, since=‘2013-01-01’)
+head(sony) 　#データの最初の１５行くらいを出力することができる。
+plot(sony[,1],sony[,5],type="l",xlab="月",ylab="終値")
+
+
+
+toyota_m <- quoteStockTsData('7203.t', since='2013-01-01',time.interval="weekly")
+toyota_ts <- ts(data=toyota_m[,-1])
+denso_m <- quoteStockTsData('6902.t', since='2013-01-01',time.interval="weekly")
+denso_ts <- ts(data=denso_m[,-1])
+
+plot(toyota_ts[,"close"],ann=FALSE,lwd=2,ylim=c(0,7000),col=1);par(new=T)
+plot(denso_ts[,"close"],ann=FALSE,lwd=2,ylim=c(0,7000),col=2);par(new=T)
+legend(0,7000,c("toyota","denso"), col = c(1:2),lwd=1, merge = TRUE)
+
+#トヨタとデンソーの相関係数
+cor(toyota_ts[,"close"],denso_ts[,"close"])
+
+
+#相関係数のプラス値
+tempture <- c(30,32,33,35,36,34,32,31,33,34)
+sales <- c(19,24,25,29,31,26,23,21,24,28)
+ice  <- data.frame(tempture=tempture, sales=sales)
+g = ggplot(ice, aes(tempture, sales))
+g + geom_point()
+g + geom_point() + stat_smooth(method = "lm")
+
+cor(ice$sales,ice$tempture)
+
+
+#相関係数のマイナス値
+tempture <- c(10,7,6,12,9,10)
+sales <- c(13,19,19,12,15,12)
+oden  <- data.frame(tempture=tempture, sales=sales)
+g = ggplot(oden, aes(tempture, sales))
+g + geom_point()
+g + geom_point() + stat_smooth(method = "lm")
+
+cor(oden$sales,oden$tempture)
+
+
+#大企業はどれか
+install.packages("maptools")
+library(maptools)
+# プロット
+CC <- c("gunho","matsukiyo","asahikasei","kirin","aoki","shiseido","daiichi","sharp")
+CAP <- c(1267,137,952,1662,139,601,1412,629)
+ASSETS <- c(32,137,824,1278,111,304,1649,135)
+
+d <- data.frame(CAP, ASSETS)
+rownames(d) <- CC
+
+plot(d$ASSETS, d$CAP, pch=16, xlab="純資産", ylab="時価総額")
+pointLabel(x=d$ASSETS, y=d$CAP, labels=rownames(d))
+norns.lm <- lm(CAP~ASSETS , data=d)
+abline(norns.lm , lwd=1 , col="red")
+
+
+labs <- c("gunho","matsukiyo","asahikasei","kirin","aoki","shiseido","daiichi","sharp")
+market.price<- c(1267,137,952,1662,139,601,1412,629)
+book.value <- c(32,137,824,1278,111,304,1649,135)
+
+data <- data.frame(market.price, book.value, row.names=labs)
+
+plot(data$book.value, data$market.price, pch=16, xlab="純資産", ylab="時価総額")
+pointLabel(x=data$book.value, y=data$market.price, labels=rownames(data))
+
+norns.lm <- lm(market.price~book.value , data=data)
+abline(norns.lm , lwd=1 , col="red")
+
+pca = prcomp(data)
+pca
+
+summary(pca)
+
+biplot(pca)
+
+
+#缶コーヒー総合力1位はどれだ？
+KOKU<-c(-0.116248,-1.278724,1.0462287,1.0462287,1.0462287,0.4649906,-1.278724,-1.278724,-0.697486,1.0462287)
+KAORI<-c(1.2456822,-1.245682,-0.415227,0.4152274,1.2456822,-0.415227,1.2456822,-1.245682,-1.245682,0.4152274)
+SANMI<-c(1.5275252,0.0727393,0.8001323,-0.654654,1.5275252,-0.654654,-1.382047,-1.382047,0.0727393,0.0727393)
+data<-data.frame(KOKU,KAORI,SANMI, row.names=c("Sマルタ","モーニングS","BOSS","FIRE","サンタマルタ","BLACK無糖","UCCB","ジョージアB","ROOT","WANDA"))
+
+data
+
+pca<-prcomp(data,scale.=TRUE)
+pca
+
+summary(pca)
+
+biplot(pca)
