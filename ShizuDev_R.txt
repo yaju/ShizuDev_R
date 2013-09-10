@@ -1,7 +1,7 @@
-install.packages(“RFinanceYJ”)
-library(RFinanceYJ)sony <- quoteStockTsData(‘6758.t’, since=‘2013-01-01’)
-toyota <- quoteStockTsData(‘7203.t’, since=‘2013-01-01’)
-nikkei_h <- quoteStockTsData(‘998407.O’, since=‘2013-01-01’)
+install.packages("RFinanceYJ")
+library(RFinanceYJ)sony <- quoteStockTsData('6758.t’, since='2013-01-01’)
+toyota <- quoteStockTsData('7203.t’, since='2013-01-01’)
+nikkei_h <- quoteStockTsData('998407.O’, since='2013-01-01’)
 head(sony) 　#データの最初の１５行くらいを出力することができる。
 plot(sony[,1],sony[,5],type="l",xlab="月",ylab="終値")
 
